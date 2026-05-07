@@ -1,0 +1,15 @@
+target/
+.classpath
+.project
+.settings/
+*.class
+*.jar
+*.log
+.DS_Store
+*.swp
+*.swo
+*~
+node_modules/
+.idea/
+*.iml
+.vscode/settings.json
