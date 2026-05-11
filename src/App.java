@@ -1,35 +1,22 @@
-
-import java.util.Scanner;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONArray;
-
+import java.sql.Connection;
 
 public class App {
-    
-    Scanner sc = new Scanner(System.in);
-    
+
     public static void main(String[] args) {
-        App program = new App();
-        program.run();
+
+        System.out.println("Provant connexió amb MySQL...");
+
+        Connection conn = DatabaseConnection.connect();
+
+        if (conn != null) {
+            System.out.println("Connexió correcta a tpv_botiga!");
+            try {
+                conn.close();   // tanquem la connexió de prova
+            } catch (Exception e) {
+                System.err.println("Error en tancar: " + e.getMessage());
+            }
+        } else {
+            System.out.println(" No s'ha pogut connectar. Revisa MySQL i la contrasenya.");
+        }
     }
-    
-    private JSONArray loadArticlesJSON() {
-        DatabaseConnection dbConn = new DatabaseConnection();
-        return dbConn.loadDataAsArray("articles.json");
-    }
-    
-    public void run() {
-        boolean exit = false;
-       do{ 
-        // Menú principal
-       }while (!exit);
-            
-        
-    }
-    
-    
 }
-
-
-
-
