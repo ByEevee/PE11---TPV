@@ -5,14 +5,11 @@ import java.sql.SQLException;
 public class DatabaseConnection {
 
     // ===== CONFIGURACIÓ DE CONNEXIÓ =====
-    private static final String URL      = "jdbc:mysql://localhost:3306/tpv_botiga";
+    private static final String URL      = "jdbc:mysql://127.0.0.1:3306/tpv_botiga";
     private static final String USER     = "root";
     private static final String PASSWORD = "";   
 
-    /**
-     * Retorna una connexió activa a la base de dades MySQL.
-     * @return Connection o null si hi ha error
-     */
+    //Retorna una connexió activa a la base de dades MySQL.
     public static Connection connect() {
         try {
             
