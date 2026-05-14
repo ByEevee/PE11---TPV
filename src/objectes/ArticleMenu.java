@@ -26,6 +26,9 @@ public class ArticleMenu {
             System.out.println("=".repeat(50));
             System.out.println("1. Afegir una camisa");
             System.out.println("2. Afegir un pantaló");
+            System.out.println("3. Veure tots els articles");
+            System.out.println("4. Veure camises");
+            System.out.println("5. Veure pantalons");
             System.out.println("0. Tornar enrere");
             System.out.println("=".repeat(50));
             System.out.print("Selecciona una opció: ");
@@ -38,6 +41,15 @@ public class ArticleMenu {
                     break;
                 case 2:
                     afegirPantalo();
+                    break;
+                case 3:
+                    verArticles();
+                    break;
+                case 4:
+                    verCamises();
+                    break;
+                case 5:
+                    verPantalons();
                     break;
                 case 0:
                     tornar = true;
@@ -122,7 +134,60 @@ public class ArticleMenu {
         }
     }
 
-    
+    // =========================================================
+    // CONSULTES
+    // =========================================================
+
+    private void verArticles() {
+        System.out.println("\n" + "-".repeat(50));
+        System.out.println("TOTS ELS ARTICLES");
+        System.out.println("-".repeat(50));
+
+        var articles = service.getArticleDAO().getAll();
+
+        if (articles.isEmpty()) {
+            System.out.println("No hi ha articles al catàleg.");
+        } else {
+            for (int i = 0; i < articles.size(); i++) {
+                System.out.println((i + 1) + ". " + articles.get(i));
+            }
+            System.out.println("\nTotal: " + articles.size() + " articles");
+        }
+    }
+
+    private void verCamises() {
+        System.out.println("\n" + "-".repeat(50));
+        System.out.println("CAMISES");
+        System.out.println("-".repeat(50));
+
+        var camises = service.getArticleDAO().getByFamilia("camisa");
+
+        if (camises.isEmpty()) {
+            System.out.println("No hi ha camises al catàleg.");
+        } else {
+            for (int i = 0; i < camises.size(); i++) {
+                System.out.println((i + 1) + ". " + camises.get(i));
+            }
+            System.out.println("\nTotal: " + camises.size() + " camises");
+        }
+    }
+
+    private void verPantalons() {
+        System.out.println("\n" + "-".repeat(50));
+        System.out.println("PANTALONS");
+        System.out.println("-".repeat(50));
+
+        var pantalons = service.getArticleDAO().getByFamilia("pantaló");
+
+        if (pantalons.isEmpty()) {
+            System.out.println("No hi ha pantalons al catàleg.");
+        } else {
+            for (int i = 0; i < pantalons.size(); i++) {
+                System.out.println((i + 1) + ". " + pantalons.get(i));
+            }
+            System.out.println("\nTotal: " + pantalons.size() + " pantalons");
+        }
+    }
 
     // =========================================================
     // UTILITATS
