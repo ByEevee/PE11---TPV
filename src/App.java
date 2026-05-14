@@ -11,13 +11,13 @@ public class App {
         Connection conn = DatabaseConnection.connect();
 
         if (conn != null) {
-            System.out.println("✓ Connexió correcta a tpv_botiga!\n");
+            System.out.println("Connexió correcta a tpv_botiga!\n");
 
             // Crear la DAO
             DatabaseManager db = new DatabaseManager(conn);
 
             System.out.println("=== PROVANT DAO ===");
-            System.out.println("✓ DAO funcionando\n");
+            System.out.println("DAO funcionant\n");
 
             // Prueba SELECT real
             System.out.println("=== PROVANT SELECT ==="  );
@@ -48,7 +48,7 @@ public class App {
             db.close();
 
         } else {
-            System.out.println("✗ No s'ha pogut connectar. Revisa MySQL i la contrasenya.");
+            System.out.println("No s'ha pogut connectar. Revisa MySQL i la contrasenya.");
         }
     }
 }

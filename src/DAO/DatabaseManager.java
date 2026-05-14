@@ -9,19 +9,13 @@ public class DatabaseManager {
 
     private Connection conn;
 
-    /**
-     * Constructor que recibe una conexión activa
-     * @param conn Conexión a la base de datos
-     */
+    // Constructor que rep una conexió activa
     public DatabaseManager(Connection conn) {
         this.conn = conn;
     }
 
-    /**
-     * Ejecuta una consulta SELECT
-     * @param sql Sentencia SQL SELECT
-     * @return ResultSet con los resultados o null si hay error
-     */
+    //Ejecuta una consulta SELECT
+     
     public ResultSet executeQuery(String sql) {
 
         try {
@@ -38,11 +32,8 @@ public class DatabaseManager {
         }
     }
 
-    /**
-     * Ejecuta una operación INSERT, UPDATE o DELETE
-     * @param sql Sentencia SQL de modificación
-     * @return Número de filas afectadas o 0 si hay error
-     */
+    //Ejecuta una operación INSERT, UPDATE o DELETE
+    
     public int executeUpdate(String sql) {
 
         try {
@@ -59,9 +50,7 @@ public class DatabaseManager {
         }
     }
 
-    /**
-     * Cierra la conexión a la base de datos
-     */
+    // Cierra la conexión a la base de datos
     public void close() {
 
         try {
