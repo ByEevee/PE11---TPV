@@ -26,9 +26,6 @@ public class ArticleMenu {
             System.out.println("=".repeat(50));
             System.out.println("1. Afegir una camisa");
             System.out.println("2. Afegir un pantaló");
-            System.out.println("3. Veure tots els articles");
-            System.out.println("4. Veure camises");
-            System.out.println("5. Veure pantalons");
             System.out.println("0. Tornar enrere");
             System.out.println("=".repeat(50));
             System.out.print("Selecciona una opció: ");
