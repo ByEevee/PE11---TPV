@@ -161,6 +161,54 @@ public class ArticleDAO {
         }
     }
 
+    /**
+     * Actualitza una camisa sencera.
+     */
+    public boolean updateCamisa(Camisa c) {
+        String sql = "UPDATE articles SET nom = ?, preu_base = ?, iva = ?, stock = ?, " +
+                     "talla_coll = ?, amplada_pit = ? WHERE id = ?";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, c.getNom());
+            ps.setDouble(2, c.getPreuBase());
+            ps.setInt(3, c.getIva());
+            ps.setInt(4, c.getStock());
+            ps.setInt(5, c.getTallaColl());
+            ps.setInt(6, c.getAmpladaPit());
+            ps.setInt(7, c.getId());
+
+            return ps.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            System.err.println("Error actualitzant camisa: " + e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Actualitza un pantaló sencer.
+     */
+    public boolean updatePantalo(Pantalo p) {
+        String sql = "UPDATE articles SET nom = ?, preu_base = ?, iva = ?, stock = ?, " +
+                     "talla_cintura = ?, llargada_camal = ? WHERE id = ?";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, p.getNom());
+            ps.setDouble(2, p.getPreuBase());
+            ps.setInt(3, p.getIva());
+            ps.setInt(4, p.getStock());
+            ps.setInt(5, p.getTallaCintura());
+            ps.setInt(6, p.getLlargadaCamal());
+            ps.setInt(7, p.getId());
+
+            return ps.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            System.err.println("Error actualitzant pantaló: " + e.getMessage());
+            return false;
+        }
+    }
+
     // =========================================================
     // DELETE - Eliminacions
     // =========================================================

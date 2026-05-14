@@ -119,6 +119,88 @@ public class ArticleService {
     }
 
     // =========================================================
+    // MODIFICACIÓ D'ARTICLES
+    // =========================================================
+
+    /**
+     * Modifica un article existent.
+     * Accepta els nous valors i valida les dades.
+     */
+    public boolean modificarArticle(int id, String nom, double preuBase, int iva, int stock,
+                                     Object param1, Object param2) {
+
+        // Comprovem que l'article existeix
+        Article article = articleDAO.getById(id);
+
+        if (article == null) {
+            System.err.println("Error: No existeix cap article amb l'ID " + id + ".");
+            return false;
+        }
+
+        // Validem les dades comunes
+        if (!validarNom(nom)) {
+            System.err.println("Error: El nom no pot estar buit.");
+            return false;
+        }
+        if (!validarPreu(preuBase)) {
+            System.err.println("Error: El preu ha de ser positiu.");
+            return false;
+        }
+        if (!validarIVA(iva)) {
+            System.err.println("Error: L'IVA ha de ser entre 4 i 21.");
+            return false;
+        }
+        if (!validarStock(stock)) {
+            System.err.println("Error: El stock no pot ser negatiu.");
+            return false;
+        }
+
+        // Validem i actualitzem segons el tipus d'article
+        boolean resultat = false;
+
+        if (article instanceof Camisa) {
+            int tallaColl = (Integer) param1;
+            int ampladaPit = (Integer) param2;
+
+            if (!validarTallaColl(tallaColl)) {
+                System.err.println("Error: La talla de coll ha de ser entre 36 i 52.");
+                return false;
+            }
+            if (!validarAmpladaPit(ampladaPit)) {
+                System.err.println("Error: L'amplada de pit ha de ser entre 10 i 15.");
+                return false;
+            }
+
+            Camisa camisa = new Camisa(id, nom, preuBase, iva, stock, tallaColl, ampladaPit);
+            resultat = articleDAO.updateCamisa(camisa);
+
+        } else if (article instanceof Pantalo) {
+            int tallaCintura = (Integer) param1;
+            int llargadaCamal = (Integer) param2;
+
+            if (!validarTallaCintura(tallaCintura)) {
+                System.err.println("Error: La talla de cintura ha de ser entre 24 i 56.");
+                return false;
+            }
+            if (!validarLlargadaCamal(llargadaCamal)) {
+                System.err.println("Error: La llargada del camal ha de ser entre 32 i 46.");
+                return false;
+            }
+
+            Pantalo pantalo = new Pantalo(id, nom, preuBase, iva, stock, tallaCintura, llargadaCamal);
+            resultat = articleDAO.updatePantalo(pantalo);
+        }
+
+        if (resultat) {
+            System.out.println("Article modificat correctament!");
+        } else {
+            System.err.println("Error modificant l'article a la BD.");
+        }
+
+        return resultat;
+    }
+
+    // =========================================================
     // BAIXA D'ARTICLES
     // =========================================================
 
