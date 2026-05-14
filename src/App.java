@@ -1,77 +1,43 @@
 import java.sql.Connection;
-import java.sql.ResultSet;
-import java.util.List;
-import DAO.DatabaseManager;
-import objectes.Article;
+import objectes.ArticleMenu;
+import objectes.ArticleService;
 
 public class App {
 
     public static void main(String[] args) {
 
-        System.out.println("=== PROVANT CONNEXIÓ AMB MYSQL ===\n");
+        System.out.println("=== SISTEMA DE GESTIÓ DE BOTIGA (TPV) ===\n");
 
+        // Conexión a la base de datos
+        System.out.println("Connectant a la base de dades...\n");
         Connection conn = DatabaseConnection.connect();
 
         if (conn != null) {
             System.out.println("Connexió correcta a tpv_botiga!\n");
 
-            // LECTURA JSON 
-            System.out.println("=== PROVANT LECTURA JSON  ===");
-            JSONConnection jsonConn = new JSONConnection();
-            
-            // Passem la ruta relativa segons la teva estructura de carpetes
-            String rutaJson = "src/BBDD/PE11_articles.json"; 
-            List<Article> articlesImportats = jsonConn.leerArticles(rutaJson);
+            // Crear servicio de articles
+            ArticleService service = new ArticleService(conn);
 
-            if (!articlesImportats.isEmpty()) {
-                System.out.println("S'han llegit " + articlesImportats.size() + " articles del fitxer JSON correctament.\n");
-                
-                // Mostrar un parell per verificar que l'estructura en memòria és correcta 
-                for (int i = 0; i < Math.min(3, articlesImportats.size()); i++) {
-                    Article a = articlesImportats.get(i);
-                    System.out.println("Importat: " + a.getNom() + " [" + a.getFamilia() + "]");
+            // Crear menú y mostrarlo
+            ArticleMenu menu = new ArticleMenu(service);
+            menu.mostraMenu();
+
+            // Tancar la connexió al salir del menú
+            try {
+                if (conn != null && !conn.isClosed()) {
+                    conn.close();
+                    System.out.println("\nConnexió tancada correctament.");
                 }
-                System.out.println("");
-            } else {
-                System.out.println("Atenció: No s'han pogut carregar articles del JSON. Revisa la ruta: " + rutaJson + "\n");
+            } catch (Exception e) {
+                System.err.println("Error tancant la connexió: " + e.getMessage());
             }
-
-            //PROVA DE LA DAO
-            DatabaseManager db = new DatabaseManager(conn);
-
-            System.out.println("=== PROVANT DAO ===");
-            System.out.println("DAO funcionant\n");
-
-            // Prova SELECT real
-            System.out.println("=== PROVANT SELECT ===");
-            System.out.println("Llistant articles de la taula:\n");
-
-            ResultSet rs = db.executeQuery("SELECT id, nom, familia, preu_base FROM articles");
-
-            if (rs != null) {
-                try {
-                    int count = 0;
-                    while (rs.next()) {
-                        int id = rs.getInt("id");
-                        String nom = rs.getString("nom");
-                        String familia = rs.getString("familia");
-                        double preu = rs.getDouble("preu_base");
-
-                        System.out.println(count + 1 + ". [" + id + "] " + nom + " (" + familia + ") - " + preu + "€");
-                        count++;
-                    }
-                    System.out.println("\nTotal: " + count + " articles a la BD\n");
-
-                } catch (Exception e) {
-                    System.err.println("Error llegint resultats: " + e.getMessage());
-                }
-            }
-
-            // Tancar la DAO
-            db.close();
 
         } else {
-            System.out.println("No s'ha pogut connectar. Revisa MySQL i la contrasenya.");
+            System.err.println("No s'ha pogut connectar a la base de dades.");
+            System.err.println("Revisa que:");
+            System.err.println("  - MySQL estigui en execució");
+            System.err.println("  - La base de dades 'tpv_botiga' existeixi");
+            System.err.println("  - L'usuari i contrasenya siguin correctes");
         }
     }
 }
