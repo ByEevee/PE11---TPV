@@ -1,7 +1,6 @@
 package objectes;
 import java.sql.Connection;
 import DAO.ArticleDAO;
-import objectes.*;
 
 /**
  * Servei de gestió d'articles.
@@ -26,46 +25,36 @@ public class ArticleService {
     public boolean altaCamisa(int id, String nom, double preuBase, int iva, int stock,
                                int tallaColl, int ampladaPit) {
 
-        // Validacions
         if (!validarId(id)) {
             System.err.println("Error: L'ID ja existeix.");
             return false;
         }
-
         if (!validarNom(nom)) {
             System.err.println("Error: El nom no pot estar buit.");
             return false;
         }
-
         if (!validarPreu(preuBase)) {
             System.err.println("Error: El preu ha de ser positiu.");
             return false;
         }
-
         if (!validarIVA(iva)) {
             System.err.println("Error: L'IVA ha de ser entre 4 i 21.");
             return false;
         }
-
         if (!validarStock(stock)) {
             System.err.println("Error: El stock no pot ser negatiu.");
             return false;
         }
-
         if (!validarTallaColl(tallaColl)) {
             System.err.println("Error: La talla de coll ha de ser entre 36 i 52.");
             return false;
         }
-
         if (!validarAmpladaPit(ampladaPit)) {
             System.err.println("Error: L'amplada de pit ha de ser entre 10 i 15.");
             return false;
         }
 
-        // Crear objecte
         Camisa camisa = new Camisa(id, nom, preuBase, iva, stock, tallaColl, ampladaPit);
-
-        // Inserir a BD
         boolean resultat = articleDAO.insertCamisa(camisa);
 
         if (resultat) {
@@ -74,7 +63,6 @@ public class ArticleService {
         } else {
             System.err.println("Error inserint la camisa a la BD.");
         }
-
         return resultat;
     }
 
@@ -89,46 +77,36 @@ public class ArticleService {
     public boolean altaPantalo(int id, String nom, double preuBase, int iva, int stock,
                                 int tallaCintura, int llargadaCamal) {
 
-        // Validacions
         if (!validarId(id)) {
             System.err.println("Error: L'ID ja existeix.");
             return false;
         }
-
         if (!validarNom(nom)) {
             System.err.println("Error: El nom no pot estar buit.");
             return false;
         }
-
         if (!validarPreu(preuBase)) {
             System.err.println("Error: El preu ha de ser positiu.");
             return false;
         }
-
         if (!validarIVA(iva)) {
             System.err.println("Error: L'IVA ha de ser entre 4 i 21.");
             return false;
         }
-
         if (!validarStock(stock)) {
             System.err.println("Error: El stock no pot ser negatiu.");
             return false;
         }
-
         if (!validarTallaCintura(tallaCintura)) {
             System.err.println("Error: La talla de cintura ha de ser entre 24 i 56.");
             return false;
         }
-
         if (!validarLlargadaCamal(llargadaCamal)) {
             System.err.println("Error: La llargada del camal ha de ser entre 32 i 46.");
             return false;
         }
 
-        // Crear objecte
         Pantalo pantalo = new Pantalo(id, nom, preuBase, iva, stock, tallaCintura, llargadaCamal);
-
-        // Inserir a BD
         boolean resultat = articleDAO.insertPantalo(pantalo);
 
         if (resultat) {
@@ -136,6 +114,38 @@ public class ArticleService {
             System.out.println(pantalo);
         } else {
             System.err.println("Error inserint el pantaló a la BD.");
+        }
+        return resultat;
+    }
+
+    // =========================================================
+    // BAIXA D'ARTICLES
+    // =========================================================
+
+    /**
+     * Elimina un article del catàleg.
+     */
+    public boolean baixaArticle(int id) {
+
+        // Comprovem que l'article existeix
+        Article article = articleDAO.getById(id);
+
+        if (article == null) {
+            System.err.println("Error: No existeix cap article amb l'ID " + id + ".");
+            return false;
+        }
+
+        // Mostrem l'article que s'eliminarà
+        System.out.println("\nArticle a eliminar:");
+        System.out.println(article);
+
+        // Eliminar de la BD
+        boolean resultat = articleDAO.delete(id);
+
+        if (resultat) {
+            System.out.println("Article eliminat correctament.");
+        } else {
+            System.err.println("Error eliminant l'article de la BD.");
         }
 
         return resultat;
