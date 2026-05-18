@@ -31,6 +31,7 @@ public class ArticleMenu {
             System.out.println("5. Veure pantalons");
             System.out.println("6. Modificar un article");
             System.out.println("7. Eliminar un article");
+            System.out.println("8. Importar articles des de JSON");
             System.out.println("0. Tornar enrere");
             System.out.println("=".repeat(50));
             System.out.print("Selecciona una opció: ");
@@ -59,6 +60,9 @@ public class ArticleMenu {
                 case 7:
                     eliminarArticle();
                     break;
+                case 8:
+                    importarDesDeJSON();
+                    break;
                 case 0:
                     tornar = true;
                     break;
@@ -83,7 +87,7 @@ public class ArticleMenu {
         System.out.print("Nom: ");
         String nom = sc.nextLine().trim();
 
-        System.out.print("Preu base (€): ");
+        System.out.print("Preu base ($): ");
         double preu = llegirDouble();
 
         System.out.print("IVA (4, 10 o 21): ");
@@ -120,7 +124,7 @@ public class ArticleMenu {
         System.out.print("Nom: ");
         String nom = sc.nextLine().trim();
 
-        System.out.print("Preu base (€): ");
+        System.out.print("Preu base ($): ");
         double preu = llegirDouble();
 
         System.out.print("IVA (4, 10 o 21): ");
@@ -170,7 +174,7 @@ public class ArticleMenu {
         System.out.print("\nNom: ");
         String nom = sc.nextLine().trim();
 
-        System.out.print("Preu base (€): ");
+        System.out.print("Preu base ($): ");
         double preu = llegirDouble();
 
         System.out.print("IVA (4, 10 o 21): ");
@@ -291,6 +295,43 @@ public class ArticleMenu {
         }
     }
 
+    // =========================================================
+    // IMPORTACIÓ DES DE JSON
+    // =========================================================
+
+    private static final String RUTA_JSON = "src/BBDD/PE11_articles.json";
+
+    private void importarDesDeJSON() {
+        System.out.println("\n" + "-".repeat(50));
+        System.out.println("IMPORTACIÓ D'ARTICLES DES DE JSON");
+        System.out.println("-".repeat(50));
+
+        // 1. Mostrar recompte
+        int[] recompte = service.comptarPerFamilia(RUTA_JSON);
+        System.out.println("Articles trobats al fitxer:");
+        System.out.println("  · Camises:  " + recompte[0]);
+        System.out.println("  · Pantalons: " + recompte[1]);
+        System.out.println("  · TOTAL:    " + (recompte[0] + recompte[1]));
+
+        // 2. Confirmació
+        System.out.print("\nVols importar aquests articles? (s/n): ");
+        String resp = sc.nextLine().trim().toLowerCase();
+
+        if (!resp.equals("s")) {
+            System.out.println("Importació cancel·lada.");
+            return;
+        }
+
+        // 3. Importar (INSERT o UPDATE automàtic)
+        int[] resultat = service.importarDesDeJSON(RUTA_JSON);
+
+        // 4. Informar del resultat
+        System.out.println("\n--- RESULTAT DE LA IMPORTACIÓ ---");
+        System.out.println("  ✔ Articles nous inserits: " + resultat[0]);
+        System.out.println("  ✔ Articles actualitzats:  " + resultat[1]);
+        System.out.println("  ✗ Errors:                 " + resultat[2]);
+        System.out.println("---------------------------------");
+    }
     // =========================================================
     // UTILITATS
     // =========================================================

@@ -1,6 +1,10 @@
 package objectes;
 import java.sql.Connection;
+import java.util.List;
+import java.util.List;
+
 import DAO.ArticleDAO;
+import DAO.JSONConnection;
 
 public class ArticleService {
 
@@ -228,7 +232,60 @@ public class ArticleService {
 
         return resultat;
     }
+    // =========================================================
+    // IMPORTACIÓ DES DE JSON
+    // =========================================================
 
+    /**
+     * Importa articles des d'un fitxer JSON.
+     * Fa INSERT si l'article no existeix, UPDATE si ja existeix.
+     * Retorna un array int[]{inserts, updates, errors}
+     */
+
+    public int[] importarDesDeJSON(String rutaJSON) {
+        JSONConnection jsonConn = new JSONConnection();
+        List<Article> articles = jsonConn.leerArticles(rutaJSON);
+
+        int inserts = 0, updates = 0, errors = 0;
+
+        for (Article a : articles) {
+            boolean existeix = articleDAO.existeix(a.getId());
+            boolean ok;
+
+            if (a instanceof Camisa c) {
+                ok = existeix
+                    ? articleDAO.updateCamisa(c)
+                    : articleDAO.insertCamisa(c);
+            } else {
+                Pantalo p = (Pantalo) a;
+                ok = existeix
+                    ? articleDAO.updatePantalo(p)
+                    : articleDAO.insertPantalo(p);
+            }
+
+            if (ok) {
+                if (existeix) updates++; else inserts++;
+            } else {
+                errors++;
+            }
+        }
+
+        return new int[]{inserts, updates, errors};
+    }
+
+    /**
+     * Retorna el recompte de camises i pantalons d'una llista.
+     */
+    public int[] comptarPerFamilia(String rutaJSON) {
+        JSONConnection jsonConn = new JSONConnection();
+        List<Article> articles = jsonConn.leerArticles(rutaJSON);
+        int camises = 0, pantalons = 0;
+        for (Article a : articles) {
+            if (a instanceof Camisa) camises++;
+            else pantalons++;
+        }
+        return new int[]{camises, pantalons};
+}
     // =========================================================
     // VALIDACIONS
     // =========================================================
