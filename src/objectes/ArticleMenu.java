@@ -2,7 +2,7 @@ package objectes;
 import java.util.Scanner;
 
 /**
- * Menú interactiu per a l'alta d'articles (camises i pantalons).
+ * Menú interactiu per a la gestió d'articles (camises i pantalons).
  */
 public class ArticleMenu {
 
@@ -29,6 +29,8 @@ public class ArticleMenu {
             System.out.println("3. Veure tots els articles");
             System.out.println("4. Veure camises");
             System.out.println("5. Veure pantalons");
+            System.out.println("6. Modificar un article");
+            System.out.println("7. Eliminar un article");
             System.out.println("0. Tornar enrere");
             System.out.println("=".repeat(50));
             System.out.print("Selecciona una opció: ");
@@ -50,6 +52,12 @@ public class ArticleMenu {
                     break;
                 case 5:
                     verPantalons();
+                    break;
+                case 6:
+                    modificarArticle();
+                    break;
+                case 7:
+                    eliminarArticle();
                     break;
                 case 0:
                     tornar = true;
@@ -131,6 +139,100 @@ public class ArticleMenu {
 
         if (!resultat) {
             System.out.println("\nIntenta-ho novament amb dades vàlides.");
+        }
+    }
+
+    // =========================================================
+    // MODIFICACIÓ D'ARTICLES
+    // =========================================================
+
+    /**
+     * Demana l'ID de l'article a modificar i sol·licita les noves dades.
+     */
+    private void modificarArticle() {
+        System.out.println("\n" + "-".repeat(50));
+        System.out.println("MODIFICACIÓ D'ARTICLE");
+        System.out.println("-".repeat(50));
+
+        System.out.print("ID de l'article a modificar: ");
+        int id = llegirEnter();
+
+        Article article = service.getArticleDAO().getById(id);
+
+        if (article == null) {
+            System.out.println("\nNo existeix cap article amb aquest ID.");
+            return;
+        }
+
+        System.out.println("\nArticle actual:");
+        System.out.println(article);
+
+        System.out.print("\nNom: ");
+        String nom = sc.nextLine().trim();
+
+        System.out.print("Preu base (€): ");
+        double preu = llegirDouble();
+
+        System.out.print("IVA (4, 10 o 21): ");
+        int iva = llegirEnter();
+
+        System.out.print("Stock: ");
+        int stock = llegirEnter();
+
+        boolean resultat = false;
+
+        if (article instanceof Camisa) {
+            System.out.print("Talla de coll (36-52): ");
+            int tallaColl = llegirEnter();
+
+            System.out.print("Amplada de pit (10-15): ");
+            int ampladaPit = llegirEnter();
+
+            resultat = service.modificarArticle(id, nom, preu, iva, stock, tallaColl, ampladaPit);
+
+        } else if (article instanceof Pantalo) {
+            System.out.print("Talla de cintura (24-56): ");
+            int tallaCintura = llegirEnter();
+
+            System.out.print("Llargada del camal (32-46): ");
+            int llargadaCamal = llegirEnter();
+
+            resultat = service.modificarArticle(id, nom, preu, iva, stock, tallaCintura, llargadaCamal);
+        }
+
+        if (!resultat) {
+            System.out.println("\nIntenta-ho novament amb dades vàlides.");
+        }
+    }
+
+    // =========================================================
+    // BAIXA D'ARTICLES
+    // =========================================================
+
+    /**
+     * Demana l'ID de l'article a eliminar i sol·licita confirmació.
+     */
+    private void eliminarArticle() {
+        System.out.println("\n" + "-".repeat(50));
+        System.out.println("BAIXA D'ARTICLE");
+        System.out.println("-".repeat(50));
+
+        System.out.print("ID de l'article a eliminar: ");
+        int id = llegirEnter();
+
+        // Confirmació abans d'eliminar
+        System.out.print("Estàs segur que vols eliminar l'article amb ID " + id + "? (s/n): ");
+        String confirmacio = sc.nextLine().trim().toLowerCase();
+
+        if (!confirmacio.equals("s")) {
+            System.out.println("Operació cancel·lada.");
+            return;
+        }
+
+        boolean resultat = service.baixaArticle(id);
+
+        if (!resultat) {
+            System.out.println("\nNo s'ha pogut eliminar l'article. Comprova l'ID i torna-ho a intentar.");
         }
     }
 
