@@ -31,7 +31,6 @@ public class ArticleMenu {
             System.out.println("5. Veure pantalons");
             System.out.println("6. Modificar un article");
             System.out.println("7. Eliminar un article");
-            System.out.println("8. Importar articles des de JSON");
             System.out.println("0. Tornar enrere");
             System.out.println("=".repeat(50));
             System.out.print("Selecciona una opció: ");
@@ -59,9 +58,6 @@ public class ArticleMenu {
                     break;
                 case 7:
                     eliminarArticle();
-                    break;
-                case 8:
-                    importarDesDeJSON();
                     break;
                 case 0:
                     tornar = true;
@@ -301,7 +297,7 @@ public class ArticleMenu {
 
     private static final String RUTA_JSON = "src/BBDD/PE11_articles.json";
 
-    private void importarDesDeJSON() {
+    public void importarDesDeJSON() {
         System.out.println("\n" + "-".repeat(50));
         System.out.println("IMPORTACIÓ D'ARTICLES DES DE JSON");
         System.out.println("-".repeat(50));

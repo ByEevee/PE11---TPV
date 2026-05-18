@@ -1,4 +1,5 @@
 import java.sql.Connection;
+import java.util.Scanner;
 import objectes.ArticleMenu;
 import objectes.ArticleService;
 
@@ -6,27 +7,82 @@ public class App {
 
     public static void main(String[] args) {
 
-        System.out.println("=== SISTEMA DE GESTIÓ DE BOTIGA (TPV) ===\n");
+        Scanner sc = new Scanner(System.in);
 
-        
+        System.out.println("=== SISTEMA DE GESTIÓ DE BOTIGA (TPV) ===\n");
         System.out.println("Connectant a la base de dades...\n");
         Connection conn = DatabaseConnection.connect();
 
         if (conn != null) {
             System.out.println("Connexió correcta a tpv_botiga!\n");
 
-            
             ArticleService service = new ArticleService(conn);
+            ArticleMenu articleMenu = new ArticleMenu(service);
 
-            
-            ArticleMenu menu = new ArticleMenu(service);
-            menu.mostraMenu();
+            boolean sortir = false;
 
-            
+            while (!sortir) {
+                System.out.println("\n" + "==================================================");
+                System.out.println("      SISTEMA DE GESTIÓ DE BOTIGA - TPV");
+                System.out.println( "==================================================");
+                System.out.println("1. Importació d'articles des de JSON");
+                System.out.println("2. Gestió d'articles");
+                System.out.println("3. Gestió de clients");
+                System.out.println("4. TPV - Registrar venda");
+                System.out.println("5. Consultes de vendes per client");
+                System.out.println("6. Consultes de vendes per article");
+                System.out.println("7. Càlcul de beneficis totals");
+                System.out.println("8. Recompra automàtica d'articles");
+                System.out.println("0. Sortir");
+                System.out.println( "==================================================");
+                System.out.print("Selecciona una opció: ");
+
+                int opcio;
+                try {
+                    opcio = Integer.parseInt(sc.nextLine().trim());
+                } catch (NumberFormatException e) {
+                    System.out.println("Opció no vàlida.");
+                    continue;
+                }
+
+                switch (opcio) {
+                    case 1:
+                        articleMenu.importarDesDeJSON();
+                        break;
+                    case 2:
+                        articleMenu.mostraMenu();
+                        break;
+                    case 3:
+                        System.out.println("\n[Aquí anirà la gestió de clients]");
+                        break;
+                    case 4:
+                        System.out.println("\n[Aquí anirà el TPV]");
+                        break;
+                    case 5:
+                        System.out.println("\n[Aquí aniran les consultes per client]");
+                        break;
+                    case 6:
+                        System.out.println("\n[Aquí aniran les consultes per article]");
+                        break;
+                    case 7:
+                        System.out.println("\n[Aquí anirà el càlcul de beneficis]");
+                        break;
+                    case 8:
+                        System.out.println("\n[Aquí anirà la recompra automàtica]");
+                        break;
+                    case 0:
+                        sortir = true;
+                        System.out.println("\nFins aviat!");
+                        break;
+                    default:
+                        System.out.println("Opció no vàlida.");
+                }
+            }
+
             try {
-                if (conn != null && !conn.isClosed()) {
+                if (!conn.isClosed()) {
                     conn.close();
-                    System.out.println("\nConnexió tancada correctament.");
+                    System.out.println("Connexió tancada correctament.");
                 }
             } catch (Exception e) {
                 System.err.println("Error tancant la connexió: " + e.getMessage());
