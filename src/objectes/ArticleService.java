@@ -3,10 +3,6 @@ import java.sql.Connection;
 import DAO.ArticleDAO;
 import objectes.*;
 
-/**
- * Servei de gestió d'articles.
- * Encapsula la lògica de negoci per a l'alta, modificació i eliminació d'articles.
- */
 public class ArticleService {
 
     private ArticleDAO articleDAO;

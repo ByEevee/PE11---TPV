@@ -16,7 +16,7 @@ public abstract class Article {
         this.iva = iva;
         this.stock = stock;
     }
-
+    
     public Article() {}
 
     // ===== GETTERS & SETTERS =====
