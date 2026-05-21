@@ -188,7 +188,9 @@ public class ArticleMenu {
             System.out.print("Amplada de pit (10-15): ");
             int ampladaPit = llegirEnter();
 
-            resultat = service.modificarArticle(id, nom, preu, iva, stock, tallaColl, ampladaPit);
+            // FIX: passar Integer (autoboxing) per coincidir amb el paràmetre Object del service
+            resultat = service.modificarArticle(id, nom, preu, iva, stock,
+                    Integer.valueOf(tallaColl), Integer.valueOf(ampladaPit));
 
         } else if (article instanceof Pantalo) {
             System.out.print("Talla de cintura (24-56): ");
@@ -197,7 +199,9 @@ public class ArticleMenu {
             System.out.print("Llargada del camal (32-46): ");
             int llargadaCamal = llegirEnter();
 
-            resultat = service.modificarArticle(id, nom, preu, iva, stock, tallaCintura, llargadaCamal);
+            // FIX: passar Integer (autoboxing) per coincidir amb el paràmetre Object del service
+            resultat = service.modificarArticle(id, nom, preu, iva, stock,
+                    Integer.valueOf(tallaCintura), Integer.valueOf(llargadaCamal));
         }
 
         if (!resultat) {
@@ -262,7 +266,8 @@ public class ArticleMenu {
         System.out.println("CAMISES");
         System.out.println("-".repeat(50));
 
-        var camises = service.getArticleDAO().getByFamilia("camisa");
+        // FIX: getByFamilia espera un int (codi numèric), no un String
+        var camises = service.getArticleDAO().getByFamilia(Familia.CAMISA);
 
         if (camises.isEmpty()) {
             System.out.println("No hi ha camises al catàleg.");
@@ -279,7 +284,8 @@ public class ArticleMenu {
         System.out.println("PANTALONS");
         System.out.println("-".repeat(50));
 
-        var pantalons = service.getArticleDAO().getByFamilia("pantaló");
+        // FIX: getByFamilia espera un int (codi numèric), no un String
+        var pantalons = service.getArticleDAO().getByFamilia(Familia.PANTALO);
 
         if (pantalons.isEmpty()) {
             System.out.println("No hi ha pantalons al catàleg.");
@@ -323,11 +329,12 @@ public class ArticleMenu {
 
         // 4. Informar del resultat
         System.out.println("\n--- RESULTAT DE LA IMPORTACIÓ ---");
-        System.out.println("  ✔ Articles nous inserits: " + resultat[0]);
-        System.out.println("  ✔ Articles actualitzats:  " + resultat[1]);
-        System.out.println("  ✗ Errors:                 " + resultat[2]);
+        System.out.println("  · Articles nous inserits: " + resultat[0]);
+        System.out.println("  · Articles actualitzats:  " + resultat[1]);
+        System.out.println("  x Errors:                 " + resultat[2]);
         System.out.println("---------------------------------");
     }
+
     // =========================================================
     // UTILITATS
     // =========================================================

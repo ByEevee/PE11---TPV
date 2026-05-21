@@ -32,12 +32,12 @@ public class JSONConnection {
                 // Extraemos como JSONObject y hacemos casting a Long (estándar de json-simple 1.1.1)
                 int id = ((Long) item.get("id")).intValue();
                 String nom = (String) item.get("nom");
-                String familia = (String) item.get("familia");
+                int familia = ((Long) item.get("familia")).intValue();
                 double preuBase = ((Number) item.get("preu_base")).doubleValue();
                 int iva = ((Long) item.get("iva")).intValue();
                 int stock = ((Long) item.get("stock")).intValue();
 
-                if (familia.equalsIgnoreCase("camisa")) {
+                if (familia == 1) {
                     int tColl = ((Long) item.get("talla_coll")).intValue();
                     int aPit = ((Long) item.get("amplada_pit")).intValue();
                     articulos.add(new Camisa(id, nom, preuBase, iva, stock, tColl, aPit));
