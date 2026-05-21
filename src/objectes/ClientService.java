@@ -136,6 +136,49 @@ public class ClientService {
     }
 
     // =========================================================
+    // BAIXA DE CLIENTS
+    // =========================================================
+
+    /**
+     * Elimina un client del sistema pel seu DNI.
+     * No es pot eliminar el client genèric '000'.
+     * No es pot eliminar un client que tingui tiquets associats.
+     *
+     * @param dni DNI del client a eliminar.
+     * @return true si el client s'ha eliminat correctament, false en cas contrari.
+     */
+    public boolean baixaClient(String dni) {
+
+        // Validació: DNI no pot ser el client genèric protegit
+        if (esClientGeneric(dni)) {
+            System.err.println("Error: No es pot eliminar el Client Genèric '000' del sistema.");
+            return false;
+        }
+
+        // Validació: el client ha d'existir
+        if (!clientDAO.existeix(dni.trim())) {
+            System.err.println("Error: No existeix cap client amb el DNI '" + dni + "'.");
+            return false;
+        }
+
+        // Validació: el client no pot tenir tiquets associats
+        if (clientDAO.teTiquets(dni.trim())) {
+            System.err.println("Error: No es pot eliminar el client '" + dni + "' perquè té tiquets associats.");
+            return false;
+        }
+
+        boolean resultat = clientDAO.delete(dni.trim());
+
+        if (resultat) {
+            System.out.println("Client amb DNI '" + dni + "' eliminat correctament.");
+        } else {
+            System.err.println("Error eliminant el client de la base de dades.");
+        }
+
+        return resultat;
+    }
+
+    // =========================================================
     // GETTER
     // =========================================================
 

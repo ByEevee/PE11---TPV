@@ -40,7 +40,7 @@ public class ClientMenu {
                     altaClient();
                     break;
                 case 2:
-                    System.out.println("Funcionalitat d'eliminar client en desenvolupament.");
+                    baixaClient();
                     break;
                 case 3:
                     System.out.println("Funcionalitat de modificar client en desenvolupament.");
@@ -84,6 +84,47 @@ public class ClientMenu {
         if (!resultat) {
             System.out.println("\nIntenta-ho novament amb dades vàlides.");
         }
+    }
+
+    // =========================================================
+    // BAIXA DE CLIENTS
+    // =========================================================
+
+    /**
+     * Demana el DNI per pantalla, mostra les dades del client trobat,
+     * sol·licita confirmació i crida el servei d'eliminació.
+     */
+    private void baixaClient() {
+        System.out.println("\n" + "-".repeat(50));
+        System.out.println("BAIXA DE CLIENT");
+        System.out.println("-".repeat(50));
+
+        System.out.print("DNI del client a eliminar: ");
+        String dni = sc.nextLine().trim();
+
+        if (dni.isEmpty()) {
+            System.out.println("El DNI no pot estar buit.");
+            return;
+        }
+
+        // Mostrar les dades del client abans de confirmar
+        objectes.Client client = service.getClientDAO().getByDni(dni);
+        if (client == null) {
+            System.err.println("Error: No existeix cap client amb el DNI '" + dni + "'.");
+            return;
+        }
+
+        System.out.println("\nClient trobat:");
+        System.out.println("  " + client);
+        System.out.print("\nEstàs segur que vols eliminar aquest client? (s/n): ");
+        String confirmacio = sc.nextLine().trim().toLowerCase();
+
+        if (!confirmacio.equals("s")) {
+            System.out.println("Operació cancel·lada.");
+            return;
+        }
+
+        service.baixaClient(dni);
     }
 
     // =========================================================
