@@ -43,7 +43,7 @@ public class ClientMenu {
                     baixaClient();
                     break;
                 case 3:
-                    System.out.println("Funcionalitat de modificar client en desenvolupament.");
+                    modificarClient();
                     break;
                 case 0:
                     tornar = true;
@@ -125,6 +125,52 @@ public class ClientMenu {
         }
 
         service.baixaClient(dni);
+    }
+
+    // =========================================================
+    // MODIFICACIÓ DE CLIENTS
+    // =========================================================
+
+    /**
+     * Mostra les dades actuals del client i permet modificar
+     * nom, email i telèfon (Enter per deixar el valor sense canvis).
+     */
+    private void modificarClient() {
+        System.out.println("\n" + "-".repeat(50));
+        System.out.println("MODIFICACIÓ DE CLIENT");
+        System.out.println("-".repeat(50));
+
+        System.out.print("DNI del client a modificar: ");
+        String dni = sc.nextLine().trim();
+
+        if (dni.isEmpty()) {
+            System.out.println("El DNI no pot estar buit.");
+            return;
+        }
+
+        // Mostrar les dades actuals
+        Client client = service.getClientDAO().getByDni(dni);
+        if (client == null) {
+            System.err.println("Error: No existeix cap client amb el DNI '" + dni + "'.");
+            return;
+        }
+
+        System.out.println("\nDades actuals:");
+        System.out.println("  " + client);
+        System.out.println("\nIntrodueix els nous valors (Enter per mantenir l'actual):");
+
+        System.out.print("Nom [" + client.getNom() + "]: ");
+        String nouNom = sc.nextLine().trim();
+
+        String emailActual = (client.getEmail() != null && !client.getEmail().isEmpty()) ? client.getEmail() : "—";
+        System.out.print("Email [" + emailActual + "]: ");
+        String nouEmail = sc.nextLine().trim();
+
+        String telefonActual = (client.getTelefon() != null && !client.getTelefon().isEmpty()) ? client.getTelefon() : "—";
+        System.out.print("Telèfon [" + telefonActual + "]: ");
+        String nouTelefon = sc.nextLine().trim();
+
+        service.modificarClient(dni, nouNom, nouEmail, nouTelefon);
     }
 
     // =========================================================

@@ -179,6 +179,66 @@ public class ClientService {
     }
 
     // =========================================================
+    // MODIFICACIÓ DE CLIENTS
+    // =========================================================
+
+    /**
+     * Modifica les dades d'un client existent (nom, email i/o telèfon).
+     * El DNI és la clau i no es pot modificar.
+     * Passa null o cadena buida en un camp per deixar-lo sense canvis.
+     *
+     * @param dni          DNI del client a modificar.
+     * @param nouNom       Nou nom (o null/buit per no canviar-lo).
+     * @param nouEmail     Nou email (o null/buit per no canviar-lo).
+     * @param nouTelefon   Nou telèfon (o null/buit per no canviar-lo).
+     * @return true si la modificació ha tingut èxit, false en cas contrari.
+     */
+    public boolean modificarClient(String dni, String nouNom, String nouEmail, String nouTelefon) {
+
+        // Validació: el client ha d'existir
+        Client actual = clientDAO.getByDni(dni.trim());
+        if (actual == null) {
+            System.err.println("Error: No existeix cap client amb el DNI '" + dni + "'.");
+            return false;
+        }
+
+        // Mantenim els valors actuals si no s'introdueix cap canvi
+        String nomFinal    = (nouNom    != null && !nouNom.trim().isEmpty())    ? nouNom.trim()    : actual.getNom();
+        String emailFinal  = (nouEmail  != null && !nouEmail.trim().isEmpty())  ? nouEmail.trim()  : actual.getEmail();
+        String telefonFinal= (nouTelefon!= null && !nouTelefon.trim().isEmpty())? nouTelefon.trim(): actual.getTelefon();
+
+        // Validació: el nom final no pot quedar buit
+        if (!validarNom(nomFinal)) {
+            System.err.println("Error: El nom del client no pot estar buit.");
+            return false;
+        }
+
+        // Validació: format email (si s'ha introduït un de nou)
+        if (nouEmail != null && !nouEmail.trim().isEmpty() && !validarEmail(nouEmail.trim())) {
+            System.err.println("Error: El format de l'email no és vàlid (ha de contenir '@').");
+            return false;
+        }
+
+        // Validació: format telèfon (si s'ha introduït un de nou)
+        if (nouTelefon != null && !nouTelefon.trim().isEmpty() && !validarTelefon(nouTelefon.trim())) {
+            System.err.println("Error: El telèfon només pot contenir dígits, espais i '+', i màxim 20 caràcters.");
+            return false;
+        }
+
+        Client actualitzat = new Client(dni.trim(), nomFinal, emailFinal, telefonFinal);
+        boolean resultat = clientDAO.update(actualitzat);
+
+        if (resultat) {
+            System.out.println("Client modificat correctament!");
+            System.out.println(actualitzat);
+        } else {
+            System.err.println("Error actualitzant el client a la base de dades.");
+        }
+
+        return resultat;
+    }
+
+    // =========================================================
     // GETTER
     // =========================================================
 
