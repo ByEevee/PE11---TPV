@@ -60,7 +60,12 @@ public class App {
                         clientMenu.mostraMenu();
                         break;
                     case 4:
-                        System.out.println("\n[Aquí anirà el TPV]");
+                        DAO.ClientDAO clientDAOtpv    = new DAO.ClientDAO(conn);
+                        DAO.ArticleDAO articleDAOtpv  = new DAO.ArticleDAO(conn);
+                        DAO.TiquetDAO tiquetDAO       = new DAO.TiquetDAO(conn);
+                        DAO.LiniaFacturaDAO liniaDAO  = new DAO.LiniaFacturaDAO(conn);
+                        objectes.TPVMenu tpvMenu = new objectes.TPVMenu(clientDAOtpv, articleDAOtpv, tiquetDAO, liniaDAO);
+                        tpvMenu.iniciarVenda();
                         break;
                     case 5:
                         System.out.println("\n[Aquí aniran les consultes per client]");
