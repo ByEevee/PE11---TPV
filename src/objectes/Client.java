@@ -22,6 +22,7 @@ public class Client {
         this.telefon = telefon;
     }
 
+
     // ===== GETTERS & SETTERS =====
 
     public String getDni() { return dni; }
@@ -54,4 +55,6 @@ public class Client {
         return String.format("[%s] %s | Email: %s | Telèfon: %s",
                 dni, nom, emailMostrat, telefonMostrat);
     }
+
+    
 }

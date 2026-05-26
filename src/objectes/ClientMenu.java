@@ -2,6 +2,8 @@ package objectes;
 
 import java.util.Scanner;
 
+import DAO.ClientDAO;
+
 /**
  * Menú interactiu per a la gestió de clients.
  * Segueix el mateix patró que ArticleMenu.
@@ -29,6 +31,8 @@ public class ClientMenu {
             System.out.println("1. Afegir un client");
             System.out.println("2. Eliminar un client");
             System.out.println("3. Modificar un client");
+            System.out.println("4. Veure tots els clients");
+            System.out.println("5. Cercar client per DNI");
             System.out.println("0. Tornar enrere");
             System.out.println("=".repeat(50));
             System.out.print("Selecciona una opció: ");
@@ -44,6 +48,12 @@ public class ClientMenu {
                     break;
                 case 3:
                     modificarClient();
+                    break;
+                case 4:
+                    veureTots();
+                    break;
+                case 5:
+                    cercarPerDni();
                     break;
                 case 0:
                     tornar = true;
@@ -172,7 +182,45 @@ public class ClientMenu {
 
         service.modificarClient(dni, nouNom, nouEmail, nouTelefon);
     }
+    // =========================================================
+    // CONSULTES
+    // =========================================================
 
+    private void veureTots() {
+        System.out.println("\n" + "-".repeat(50));
+        System.out.println("TOTS ELS CLIENTS");
+        System.out.println("-".repeat(50));
+
+        var clients = service.getClientDAO().getAll();
+
+        if (clients.isEmpty()) {
+            System.out.println("No hi ha clients registrats.");
+        } else {
+
+            for (int i = 0; i < clients.size(); i++) {
+                System.out.println((i + 1) + ". " + clients.get(i));
+            }
+
+            System.out.println("\nTotal: " + clients.size() + " clients");
+        }
+    }
+
+    private void cercarPerDni() {
+        System.out.println("\n" + "-".repeat(50));
+        System.out.println("CERCA PER DNI");
+        System.out.println("-".repeat(50));
+
+        System.out.print("Introdueix el DNI: ");
+        String dni = sc.nextLine().trim();
+
+        var client = service.getClientDAO().getByDni(dni);
+
+        if (client == null) {
+            System.out.println("No s'ha trobat cap client amb el DNI '" + dni + "'.");
+        } else {
+            System.out.println(client);
+        }
+    }
     // =========================================================
     // UTILITATS
     // =========================================================

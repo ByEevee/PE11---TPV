@@ -208,5 +208,5 @@ public class ClientDAO {
         String email   = rs.getString("email");
         String telefon = rs.getString("telefon");
         return new Client(dni, nom, email, telefon);
-    }
+    }    
 }
