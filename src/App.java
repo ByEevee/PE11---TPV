@@ -2,6 +2,8 @@ import java.sql.Connection;
 import java.util.Scanner;
 import objectes.ArticleMenu;
 import objectes.ArticleService;
+import objectes.ClientMenu;
+import objectes.ClientService;
 
 public class App {
 
@@ -53,7 +55,9 @@ public class App {
                         articleMenu.mostraMenu();
                         break;
                     case 3:
-                        System.out.println("\n[Aquí anirà la gestió de clients]");
+                        ClientService clientService = new ClientService(conn);
+                        ClientMenu clientMenu = new ClientMenu(clientService);
+                        clientMenu.mostraMenu();
                         break;
                     case 4:
                         System.out.println("\n[Aquí anirà el TPV]");
