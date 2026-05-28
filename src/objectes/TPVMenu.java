@@ -60,16 +60,13 @@ public class TPVMenu {
         // AFEGIR ARTICLES
         // =====================================================
 
-        while (true) {
-
+        int idArticle;
+        do {
             System.out.println("\n" + "-".repeat(50));
 
             System.out.print("ID Article (0 per finalitzar): ");
-            int idArticle = llegirEnter();
+            idArticle = llegirEnter();
 
-            if (idArticle == 0) {
-                break;
-            }
 
             Article article = articleDAO.getById(idArticle);
 
@@ -80,6 +77,19 @@ public class TPVMenu {
 
             System.out.println("Article: " + article.getNom());
             System.out.println("Stock disponible: " + article.getStock());
+
+            // =====================================================
+            // COMPROVAR STOCK = 0 (BLOQUEIG)
+            // =====================================================
+
+            if (article.getStock() == 0) {
+                System.out.println("---------------------------------------------------");
+                System.out.println("  ARTICLE SENSE STOCK - No es pot vendre.");
+                System.out.println("  L'article \"" + article.getNom() + "\" no té");
+                System.out.println("  unitats disponibles en aquest moment.");
+                System.out.println("---------------------------------------------------");
+                continue;
+            }
 
             System.out.print("Quantitat: ");
             int quantitat = llegirEnter();
@@ -94,7 +104,7 @@ public class TPVMenu {
             }
 
             if (article.getStock() < quantitat) {
-                System.out.println("No hi ha stock suficient.");
+                System.out.println("Stock insuficient. Stock disponible: " + article.getStock() + " unitat(s).");
                 continue;
             }
 
@@ -132,7 +142,7 @@ public class TPVMenu {
             articleDAO.updateStock(article.getId(), article.getStock());
 
             System.out.println("Article afegit correctament.");
-        }
+        }while (idArticle != 0);
 
         // =====================================================
         // COMPROVAR SI HI HA LINIES
