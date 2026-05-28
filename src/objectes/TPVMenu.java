@@ -4,6 +4,7 @@ import DAO.ClientDAO;
 import DAO.ArticleDAO;
 import DAO.TiquetDAO;
 import DAO.LiniaFacturaDAO;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -61,12 +62,17 @@ public class TPVMenu {
         // =====================================================
 
         int idArticle;
+
         do {
+
             System.out.println("\n" + "-".repeat(50));
 
             System.out.print("ID Article (0 per finalitzar): ");
             idArticle = llegirEnter();
 
+            if (idArticle == 0) {
+                break;
+            }
 
             Article article = articleDAO.getById(idArticle);
 
@@ -79,15 +85,17 @@ public class TPVMenu {
             System.out.println("Stock disponible: " + article.getStock());
 
             // =====================================================
-            // COMPROVAR STOCK = 0 (BLOQUEIG)
+            // COMPROVAR STOCK = 0
             // =====================================================
 
             if (article.getStock() == 0) {
+
                 System.out.println("---------------------------------------------------");
                 System.out.println("  ARTICLE SENSE STOCK - No es pot vendre.");
                 System.out.println("  L'article \"" + article.getNom() + "\" no té");
                 System.out.println("  unitats disponibles en aquest moment.");
                 System.out.println("---------------------------------------------------");
+
                 continue;
             }
 
@@ -95,16 +103,27 @@ public class TPVMenu {
             int quantitat = llegirEnter();
 
             // =====================================================
-            // COMPROVAR STOCK
+            // VALIDAR QUANTITAT
             // =====================================================
 
             if (quantitat <= 0) {
+
                 System.out.println("La quantitat ha de ser superior a 0.");
                 continue;
             }
 
+            // =====================================================
+            // COMPROVAR STOCK
+            // =====================================================
+
             if (article.getStock() < quantitat) {
-                System.out.println("Stock insuficient. Stock disponible: " + article.getStock() + " unitat(s).");
+
+                System.out.println(
+                        "Stock insuficient. Stock disponible: "
+                        + article.getStock()
+                        + " unitat(s)."
+                );
+
                 continue;
             }
 
@@ -133,22 +152,16 @@ public class TPVMenu {
 
             linies.add(linia);
 
-            // =====================================================
-            // ACTUALITZAR STOCK
-            // =====================================================
-
-            article.setStock(article.getStock() - quantitat);
-
-            articleDAO.updateStock(article.getId(), article.getStock());
-
             System.out.println("Article afegit correctament.");
-        }while (idArticle != 0);
+
+        } while (idArticle != 0);
 
         // =====================================================
         // COMPROVAR SI HI HA LINIES
         // =====================================================
 
         if (linies.isEmpty()) {
+
             System.out.println("No s'ha afegit cap article.");
             return;
         }
@@ -161,7 +174,9 @@ public class TPVMenu {
         double totalIva = 0;
         double totalFinal = 0;
 
-        for (LiniaFactura l : linies) {
+        for (int i = 0; i < linies.size(); i++) {
+
+            LiniaFactura l = linies.get(i);
 
             totalBase += l.getPreuBase();
             totalIva += l.getIva();
@@ -190,75 +205,212 @@ public class TPVMenu {
         // GUARDAR LINIES
         // =====================================================
 
-        for (LiniaFactura l : linies) {
+        for (int i = 0; i < linies.size(); i++) {
+
+            LiniaFactura l = linies.get(i);
+
             l.setIdTiquet(idTiquet);
+
             liniaDAO.insert(l);
+        }
+
+        // =====================================================
+        // ACTUALITZAR STOCK
+        // =====================================================
+
+        for (int i = 0; i < linies.size(); i++) {
+
+            LiniaFactura l = linies.get(i);
+
+            Article articleStock =
+                    articleDAO.getById(l.getIdArticle());
+
+            if (articleStock != null) {
+
+                int nouStock =
+                        articleStock.getStock()
+                        - l.getQuantitat();
+
+                boolean ok =
+                        articleDAO.updateStock(
+                                articleStock.getId(),
+                                nouStock
+                        );
+
+                if (!ok) {
+
+                    System.err.println(
+                            "Advertencia: no s'ha pogut actualitzar "
+                            + "l'stock de l'article "
+                            + articleStock.getId()
+                    );
+                }
+            }
         }
 
         // =====================================================
         // MOSTRAR TIQUET
         // =====================================================
 
-        imprimirTiquet(client, linies, idTiquet, totalBase, totalIva, totalFinal);
-
+        imprimirTiquet(
+                client,
+                linies,
+                idTiquet,
+                totalBase,
+                totalIva,
+                totalFinal
+        );
     }
 
-
     // =====================================================
-    // IMPRESSIÓ DEL TIQUET
+    // IMPRIMIR TIQUET
     // =====================================================
 
-    private void imprimirTiquet(Client client, ArrayList<LiniaFactura> linies,
-                                 int idTiquet, double totalBase, double totalIva, double totalFinal) {
+    private void imprimirTiquet(Client client,
+                                ArrayList<LiniaFactura> linies,
+                                int idTiquet,
+                                double totalBase,
+                                double totalIva,
+                                double totalFinal) {
 
-        String sep  = "=".repeat(50);
+        String sep = "=".repeat(50);
         String line = "-".repeat(50);
 
+        // =====================================================
         // CAPÇALERA
+        // =====================================================
+
         System.out.println("\n" + sep);
+
         System.out.println("           BOTIGA TPV");
+
         System.out.println(sep);
-        System.out.printf("  Tiquet núm.: %-10d%n", idTiquet);
-        System.out.printf("  Data:        %-10s%n", LocalDate.now());
-        System.out.println(line);
-        System.out.printf("  Client: %s%n", client.getNom());
-        System.out.printf("  DNI:    %s%n", client.getDni());
+
+        System.out.printf(
+                "  Tiquet núm.: %-10d%n",
+                idTiquet
+        );
+
+        System.out.printf(
+                "  Data:        %-10s%n",
+                LocalDate.now()
+        );
+
         System.out.println(line);
 
-        // LÍNIES
+        System.out.printf(
+                "  Client: %s%n",
+                client.getNom()
+        );
+
+        System.out.printf(
+                "  DNI:    %s%n",
+                client.getDni()
+        );
+
+        System.out.println(line);
+
+        // =====================================================
+        // ARTICLES
+        // =====================================================
+
         System.out.println("  ARTICLES:");
         System.out.println();
-        for (LiniaFactura l : linies) {
-            Article article = articleDAO.getById(l.getIdArticle());
-            String nomArticle = (article != null) ? article.getNom() : "Article " + l.getIdArticle();
-            System.out.printf("  %-25s x%d%n", nomArticle, l.getQuantitat());
-            System.out.printf("  %-25s %8.2f $%n", "  Base:", l.getPreuBase());
-            System.out.printf("  %-25s %8.2f $%n", "  IVA:", l.getIva());
-            System.out.printf("  %-25s %8.2f $%n", "  Total:", l.getPreuFinal());
+
+        for (int i = 0; i < linies.size(); i++) {
+
+            LiniaFactura l = linies.get(i);
+
+            Article article =
+                    articleDAO.getById(l.getIdArticle());
+
+            String nomArticle =
+                    (article != null)
+                    ? article.getNom()
+                    : "Article " + l.getIdArticle();
+
+            System.out.printf(
+                    "  %-25s x%d%n",
+                    nomArticle,
+                    l.getQuantitat()
+            );
+
+            System.out.printf(
+                    "  %-25s %8.2f $%n",
+                    "  Base:",
+                    l.getPreuBase()
+            );
+
+            System.out.printf(
+                    "  %-25s %8.2f $%n",
+                    "  IVA:",
+                    l.getIva()
+            );
+
+            System.out.printf(
+                    "  %-25s %8.2f $%n",
+                    "  Total:",
+                    l.getPreuFinal()
+            );
+
             System.out.println();
         }
 
+        // =====================================================
         // TOTALS
-        System.out.println(line);
-        System.out.printf("  %-25s %8.2f $%n", "TOTAL BASE:",  totalBase);
-        System.out.printf("  %-25s %8.2f $%n", "TOTAL IVA:",   totalIva);
-        System.out.printf("  %-25s %8.2f $%n", "TOTAL FINAL:", totalFinal);
+        // =====================================================
 
+        System.out.println(line);
+
+        System.out.printf(
+                "  %-25s %8.2f $%n",
+                "TOTAL BASE:",
+                totalBase
+        );
+
+        System.out.printf(
+                "  %-25s %8.2f $%n",
+                "TOTAL IVA:",
+                totalIva
+        );
+
+        System.out.printf(
+                "  %-25s %8.2f $%n",
+                "TOTAL FINAL:",
+                totalFinal
+        );
+
+        // =====================================================
         // PEU
+        // =====================================================
+
         System.out.println(sep);
-        System.out.println("       Gràcies per la seva compra!");
+
+        System.out.println(
+                "       Gràcies per la seva compra!"
+        );
+
         System.out.println(sep + "\n");
     }
+
+    // =====================================================
+    // LLEGIR ENTER
+    // =====================================================
 
     private int llegirEnter() {
 
         try {
 
-            return Integer.parseInt(sc.nextLine().trim());
+            return Integer.parseInt(
+                    sc.nextLine().trim()
+            );
 
         } catch (NumberFormatException e) {
 
-            System.out.print("Valor invàlid. Intenta-ho novament: ");
+            System.out.print(
+                    "Valor invàlid. Intenta-ho novament: "
+            );
+
             return llegirEnter();
         }
     }
