@@ -205,4 +205,23 @@ public class ArticleDAO {
             throw new SQLException("Família desconeguda: " + familia);
         }
     }
+
+    // =========================================================
+    // CONSULTA ARTICLES PER SOTA DEL LLINDAR
+    // =========================================================
+
+    public List<Article> getArticlesPerSotaLlindar(int llindar) {
+        List<Article> articles = new ArrayList<>();
+        String sql = "SELECT * FROM articles WHERE stock < ? ORDER BY id";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, llindar);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) articles.add(mapRowToArticle(rs));
+            }
+        } catch (SQLException e) {
+            System.err.println("Error consultant articles per sota del llindar: " + e.getMessage());
+        }
+        return articles;
+    }
 }

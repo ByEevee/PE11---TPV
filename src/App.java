@@ -79,7 +79,9 @@ public class App {
                         System.out.println("\n[Aquí anirà el càlcul de beneficis]");
                         break;
                     case 8:
-                        System.out.println("\n[Aquí anirà la recompra automàtica]");
+                        DAO.ArticleDAO articleDAOrecompra = new DAO.ArticleDAO(conn);
+                        objectes.PropostaCompraMenu propostaMenu = new objectes.PropostaCompraMenu(articleDAOrecompra);
+                        propostaMenu.executar();
                         break;
                     case 0:
                         sortir = true;
