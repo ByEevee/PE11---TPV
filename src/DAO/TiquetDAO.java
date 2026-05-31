@@ -86,4 +86,44 @@ public class TiquetDAO {
         t.setId(rs.getInt("id"));
         return t;
     }
+
+    // =========================================================
+    // CONSULTA VENDES PER CLIENT
+    // =========================================================
+
+    public void consultaVendesPerClient() {
+        String sql = "SELECT c.dni, c.nom, COUNT(t.id) AS num_tiquets, " +
+                     "SUM(t.total_final) AS total_gastat " +
+                     "FROM clients c " +
+                     "LEFT JOIN tiquets t ON c.dni = t.dni_client " +
+                     "GROUP BY c.dni, c.nom " +
+                     "ORDER BY total_gastat DESC";
+
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            String sep  = "=".repeat(60);
+            String line = "-".repeat(60);
+
+            System.out.println("\n" + sep);
+            System.out.println("         CONSULTA DE VENDES PER CLIENT");
+            System.out.println(sep);
+            System.out.printf("  %-12s %-20s %8s %12s%n", "DNI", "NOM", "TIQUETS", "TOTAL");
+            System.out.println(line);
+
+            while (rs.next()) {
+                System.out.printf("  %-12s %-20s %8d %11.2f$%n",
+                        rs.getString("dni"),
+                        rs.getString("nom"),
+                        rs.getInt("num_tiquets"),
+                        rs.getDouble("total_gastat")
+                );
+            }
+
+            System.out.println(sep + "\n");
+
+        } catch (SQLException e) {
+            System.err.println("Error en la consulta de vendes per client: " + e.getMessage());
+        }
+    }
 }

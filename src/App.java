@@ -68,7 +68,8 @@ public class App {
                         tpvMenu.iniciarVenda();
                         break;
                     case 5:
-                        System.out.println("\n[Aquí aniran les consultes per client]");
+                        DAO.TiquetDAO tiquetDAOconsulta = new DAO.TiquetDAO(conn);
+                        tiquetDAOconsulta.consultaVendesPerClient();
                         break;
                     case 6:
                         System.out.println("\n[Aquí aniran les consultes per article]");
