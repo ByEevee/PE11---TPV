@@ -78,7 +78,20 @@ public class PropostaCompraMenu {
             return;
         }
 
-        System.out.println("Compra confirmada.");
+        // =====================================================
+        // GENERAR JSON I ACTUALITZAR STOCK
+        // =====================================================
+
+        DAO.JSONConnection jsonConn = new DAO.JSONConnection();
+        jsonConn.guardarRecompra("proposta_recompra.json", proposta);
+
+        for (PropostaCompra p : proposta) {
+            Article a = articleDAO.getById(p.getCodi());
+            articleDAO.updateStock(a.getId(), a.getStock() + p.getQuantitat());
+        }
+
+        System.out.println("JSON generat: proposta_recompra.json");
+        System.out.println("Stock actualitzat correctament.");
         System.out.println("=".repeat(55) + "\n");
     }
 }
