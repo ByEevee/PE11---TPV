@@ -68,4 +68,42 @@ public class LiniaFacturaDAO {
                 rs.getDouble("preu_final")
         );
     }
+
+    // =========================================================
+    // CONSULTA VENDES PER ARTICLE
+    // =========================================================
+
+    public void consultaVendesPerArticle() {
+        String sql = "SELECT a.id, a.nom, SUM(l.quantitat) AS quantitat_venuda " +
+                     "FROM articles a " +
+                     "LEFT JOIN linies_factura l ON a.id = l.id_article " +
+                     "GROUP BY a.id, a.nom " +
+                     "ORDER BY quantitat_venuda DESC";
+
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            String sep  = "=".repeat(55);
+            String line = "-".repeat(55);
+
+            System.out.println("\n" + sep);
+            System.out.println("       CONSULTA DE VENDES PER ARTICLE");
+            System.out.println(sep);
+            System.out.printf("  %-6s %-30s %10s%n", "CODI", "NOM", "QUANTITAT");
+            System.out.println(line);
+
+            while (rs.next()) {
+                System.out.printf("  %-6d %-30s %10d%n",
+                        rs.getInt("id"),
+                        rs.getString("nom"),
+                        rs.getInt("quantitat_venuda")
+                );
+            }
+
+            System.out.println(sep + "\n");
+
+        } catch (SQLException e) {
+            System.err.println("Error en la consulta de vendes per article: " + e.getMessage());
+        }
+    }
 }

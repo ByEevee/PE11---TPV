@@ -126,4 +126,5 @@ public class TiquetDAO {
             System.err.println("Error en la consulta de vendes per client: " + e.getMessage());
         }
     }
+
 }

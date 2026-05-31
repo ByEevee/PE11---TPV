@@ -72,7 +72,8 @@ public class App {
                         tiquetDAOconsulta.consultaVendesPerClient();
                         break;
                     case 6:
-                        System.out.println("\n[Aquí aniran les consultes per article]");
+                        DAO.LiniaFacturaDAO liniaDAOconsulta = new DAO.LiniaFacturaDAO(conn);
+                        liniaDAOconsulta.consultaVendesPerArticle();
                         break;
                     case 7:
                         System.out.println("\n[Aquí anirà el càlcul de beneficis]");
