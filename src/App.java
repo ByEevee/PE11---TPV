@@ -74,7 +74,8 @@ public class App {
                         System.out.println("\n[Aquí aniran les consultes per article]");
                         break;
                     case 7:
-                        System.out.println("\n[Aquí anirà el càlcul de beneficis]");
+                        objectes.BeneficiMenu beneficiMenu = new objectes.BeneficiMenu(conn);
+                        beneficiMenu.mostraMenu();
                         break;
                     case 8:
                         System.out.println("\n[Aquí anirà la recompra automàtica]");

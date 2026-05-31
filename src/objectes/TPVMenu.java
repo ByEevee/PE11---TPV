@@ -1,10 +1,9 @@
 package objectes;
 
-import DAO.ClientDAO;
 import DAO.ArticleDAO;
-import DAO.TiquetDAO;
+import DAO.ClientDAO;
 import DAO.LiniaFacturaDAO;
-
+import DAO.TiquetDAO;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -131,11 +130,9 @@ public class TPVMenu {
             // CALCULS
             // =====================================================
 
-            double base = article.getPreuBase() * quantitat;
-
-            double iva = base * (article.getIva() / 100.0);
-
-            double total = base + iva;
+                double base  = article.getBaseQuantitat(quantitat);
+                double iva   = article.getImportIvaQuantitat(quantitat);
+                double total = article.getPreuFinalQuantitat(quantitat);
 
             // =====================================================
             // CREAR LINIA
