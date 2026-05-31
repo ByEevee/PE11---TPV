@@ -76,7 +76,8 @@ public class App {
                         liniaDAOconsulta.consultaVendesPerArticle();
                         break;
                     case 7:
-                        System.out.println("\n[Aquí anirà el càlcul de beneficis]");
+                        objectes.BeneficiMenu beneficiMenu = new objectes.BeneficiMenu(conn);
+                        beneficiMenu.mostraMenu();
                         break;
                     case 8:
                         DAO.ArticleDAO articleDAOrecompra = new DAO.ArticleDAO(conn);
